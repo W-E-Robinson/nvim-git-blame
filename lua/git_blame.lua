@@ -11,7 +11,7 @@ M.setup = function(args)
 end
 
 M.blame = function()
-    return module.show_info()
+    return module.popup_current_line_git_blame_info()
 end
 
 return M
