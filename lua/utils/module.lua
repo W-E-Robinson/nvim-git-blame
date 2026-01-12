@@ -1,14 +1,16 @@
 local M = {}
 
---  I need to strip the leading caret on commit hashes shorter name one
-
 function M.strip_new_lines_from_string(str)
     return (string.gsub(str, "\n", ""))
 end
 
 function M.remove_leading_caret_from_string(str)
-    -- wait wait, use at git blame first when possible!!
     return (string.gsub(str, "^", "", 1))
+end
+
+function M.current_file_path()
+    -- argument of 0 gets current buffer
+    return vim.api.nvim_buf_get_name(0)
 end
 
 function M.display_buf_text_central_pop_up(buf)
@@ -24,11 +26,6 @@ function M.display_buf_text_central_pop_up(buf)
         style = "minimal",
         border = "rounded"
     })
-end
-
-function M.current_file_path()
-    -- argument of 0 gets current buffer
-    return vim.api.nvim_buf_get_name(0)
 end
 
 function M.display_error_central_pop_up(code, signal, stderr)
