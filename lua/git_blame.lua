@@ -10,8 +10,8 @@ M.setup = function(args)
     M.config = vim.tbl_deep_extend("force", M.config, args or {})
 end
 
-M.blame = function()
-    return module.popup_current_line_git_blame_info()
+M.blame_current_line = function()
+    return module.blame_current_line()
 end
 
 return M
