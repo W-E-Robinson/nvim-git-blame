@@ -1,4 +1,4 @@
-local module = require("git_blame.module")
+local blame_current_line_module = require("functionality.blame_current_line")
 
 local config = {}
 
@@ -11,7 +11,7 @@ M.setup = function(args)
 end
 
 M.blame_current_line = function()
-    return module.blame_current_line()
+    return blame_current_line_module.blame_current_line()
 end
 
 return M
