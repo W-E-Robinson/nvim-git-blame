@@ -5,7 +5,7 @@ function M.strip_new_lines_from_string(str)
 end
 
 function M.remove_leading_caret_from_string(str)
-    return (string.gsub(str, "^", "", 1))
+    return str:gsub("^%^(.*)", "%1")
 end
 
 function M.current_file_path()
@@ -13,35 +13,16 @@ function M.current_file_path()
     return vim.api.nvim_buf_get_name(0)
 end
 
-function M.display_buf_text_central_pop_up(buf)
-    local width = 100
-    local height = 20
-
-    vim.api.nvim_open_win(buf, true, {
-        relative = "editor",
-        width = width,
-        height = height,
-        row = math.floor((vim.o.lines - height) / 2),
-        col = math.floor((vim.o.columns - width) / 2),
-        style = "minimal",
-        border = "rounded"
-    })
+function M.is_line_full_history_available(commit_hash)
+    return string.find(commit_hash, "%^") == nil
 end
 
-function M.display_error_central_pop_up(code, signal, stderr)
-    local buf = vim.api.nvim_create_buf(false, true)
-
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {
-        "Git Blame Error Info:",
-        "Code:",
-        string.format("%d", code),
-        "Signal:",
-        string.format("%d", signal),
-        "Std Error:",
-        M.strip_new_lines_from_string(stderr),
-    })
-
-    M.display_buf_text_central_pop_up(buf)
+function M.split_into_lines(str)
+    local t = {}
+    for line in str:gmatch("([^\n]*)\n?") do
+        table.insert(t, line)
+    end
+    return t
 end
 
 return M

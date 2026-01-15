@@ -1,0 +1,6 @@
+local M = {}
+
+M.CENTRAL_POP_UP_WIDTH = 80
+M.CENTRAL_POP_UP_MAX_HEIGHT = 25
+
+return M
