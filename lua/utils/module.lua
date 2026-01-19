@@ -13,7 +13,7 @@ function M.current_file_path()
     return vim.api.nvim_buf_get_name(0)
 end
 
-function M.is_line_full_history_available(commit_hash)
+function M.is_line_full_history_available(commit_hash) -- NOTE: add warning if so
     return string.find(commit_hash, "%^") == nil
 end
 
@@ -23,6 +23,10 @@ function M.split_into_lines(str)
         table.insert(t, line)
     end
     return t
+end
+
+function M.is_change_not_committed_yet(commit_hash)
+    return string.sub(commit_hash, 1, 8) == "00000000"
 end
 
 return M
