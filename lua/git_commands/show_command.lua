@@ -6,11 +6,11 @@ local ShowCommand = setmetatable({}, { __index = base_command.BaseCommand })
 ShowCommand.__index = ShowCommand
 
 function ShowCommand:new(hash)
-    return base_command.BaseCommand.new(self, { 'git', 'show', hash })
+    return base_command.BaseCommand.new(self, { "git", "show", hash })
 end
 
 function ShowCommand:suppress_diff()
-    self:append('--no-patch')
+    self:append("--no-patch")
 end
 
 function ShowCommand:format_output(format_option)
@@ -19,7 +19,7 @@ end
 
 function ShowCommand:commit_stdout_for_hash()
     self:suppress_diff()
-    self:format_output('medium')
+    self:format_output("medium")
     self:execute()
 
     return self.stdout

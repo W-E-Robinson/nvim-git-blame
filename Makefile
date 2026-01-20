@@ -9,3 +9,10 @@ test:
 		--noplugin \
 		-u ${TESTS_INIT} \
 		-c "PlenaryBustedDirectory ${TESTS_DIR} { minimal_init = '${TESTS_INIT}' }"
+style:
+	stylua .
+
+check:
+	luacheck .
+
+pre-push: style check
