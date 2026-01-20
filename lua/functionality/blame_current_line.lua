@@ -15,7 +15,13 @@ M.blame_current_line = function()
     local hash = blame:blame_current_line(file_path, current_row)
 
     if utils.is_change_not_committed_yet(hash) then
-        vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "Not committed yet..." })
+        vim.api.nvim_buf_set_lines(
+            buf,
+            0,
+            -1,
+            false,
+            { "Not committed yet..." }
+        )
         rendering.display_buf_text_central_pop_up(buf, 1)
         return
     end
