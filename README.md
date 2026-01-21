@@ -1,30 +1,23 @@
-# nvim-git-blame
+# nvim_git_blame
 
-# A Neovim Plugin Template
+A small Neovim plugin to show Git blame information for your files and lines.
 
-Click on `Use this template`
+## Features
 
-## Features and structure
+- `:BlameCurrentLine` - Show Git blame information for the **current line** in central pop up.
 
-- 100% Lua
-- Github actions for:
-  - vimdocs autogeneration from README.md file
-  - luarocks release (LUAROCKS_API_KEY secret configuration required)
+## Installation
 
-### Plugin structure
+### Using `lazy.nvim`
 
-```
-.
-├── lua
-│   ├── plugin_name
-│   │   └── module.lua
-│   └── plugin_name.lua
-├── Makefile
-├── plugin
-│   └── plugin_name.lua
-├── README.md
-├── tests
-│   ├── minimal_init.lua
-│   └── plugin_name
-│       └── plugin_name_spec.lua
+Add this to your plugin list:
+
+```lua
+{
+  'W-E-Robinson/nvim_git_blame',
+  config = function()
+      require("git_blame").setup()
+      vim.keymap.set("n", "<leader>bcl", vim.cmd.BlameCurrentLine)
+  end
+}
 ```
