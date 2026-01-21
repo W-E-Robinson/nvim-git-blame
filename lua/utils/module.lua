@@ -1,32 +1,49 @@
 local M = {}
 
+---Removes new lines '\n' from a string
+---@param str string The string to be stripped
+---@return string
 function M.strip_new_lines_from_string(str)
     return (string.gsub(str, "\n", ""))
 end
 
+---Removes preceding caret from a given string and returns
+---@param str string The string to be modified
+---@return string
 function M.remove_leading_caret_from_string(str)
-    return str:gsub("^%^(.*)", "%1")
+    return str:gsub("^%^(.*)", "%1") -- NOTE: magix regex -- oooh the emmylua note here?
 end
 
+---Returns absolute path of current file
+---@return string
 function M.current_file_path()
     -- argument of 0 gets current buffer
     return vim.api.nvim_buf_get_name(0)
 end
 
+---Determines if commit hash is preceded with a caret, indicating incomoplete history
+---@param commit_hash string The commit hash
+---@return boolean
 function M.is_line_full_history_available(commit_hash) -- NOTE: add warning if so
-    return string.find(commit_hash, "%^") == nil
+    return string.find(commit_hash, "%^") == nil -- NOTE magix nregex
 end
 
+---Splits a string on new lines, returning as a table
+---@param str string The string containing new lines
+---@return table string[]
 function M.split_into_lines(str)
     local t = {}
-    for line in str:gmatch("([^\n]*)\n?") do
+    for line in str:gmatch("([^\n]*)\n?") do -- NOTE magix nregex
         table.insert(t, line)
     end
     return t
 end
 
+---Detects if a commit hash is part of an ongoing uncommitted change
+---@param commit_hash string The commit hash
+---@return boolean
 function M.is_change_not_committed_yet(commit_hash)
-    return string.sub(commit_hash, 1, 8) == "00000000"
+    return string.sub(commit_hash, 1, 8) == "00000000" -- NOTE: magic number
 end
 
 return M
