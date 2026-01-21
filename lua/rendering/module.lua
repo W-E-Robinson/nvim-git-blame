@@ -2,6 +2,9 @@ local constants = require("constants.module")
 
 local M = {}
 
+---Displays a buf in a central pop up
+---@param buf any Buf to be displayed, buf contains a table of strings
+---@param height number provided height required to display lines of buf
 function M.display_buf_text_central_pop_up(buf, height)
     local width = constants.CENTRAL_POP_UP_WIDTH
 

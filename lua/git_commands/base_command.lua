@@ -1,8 +1,20 @@
 local M = {}
 
+---Class to extend upon for building git command functionality
+---@class BaseCommand
+---@field command string[]
+---@field code integer|nil
+---@field signal integer|nil
+---@field stdout string|nil
+---@field stderr string|nil
 local BaseCommand = {}
 BaseCommand.__index = BaseCommand
 
+---Constructor for git base command class
+---@generic T:BaseCommand
+---@param self T
+---@param cmd string[]
+---@return T
 function BaseCommand:new(cmd)
     return setmetatable({
         command = cmd,
@@ -13,10 +25,13 @@ function BaseCommand:new(cmd)
     }, self)
 end
 
-function BaseCommand:append(option)
-    table.insert(self.command, option)
+---Appends an arg onto the base git command constructed
+---@param arg string git arg to be appended
+function BaseCommand:append(arg)
+    table.insert(self.command, arg)
 end
 
+---Executes the git command and populates code, signal, stdout and stderr
 function BaseCommand:execute()
     local execution_result = vim.system(self.command, { text = true }):wait()
     self.code = execution_result.code

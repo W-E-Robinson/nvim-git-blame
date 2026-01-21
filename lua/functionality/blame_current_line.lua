@@ -5,6 +5,7 @@ local show_command = require("git_commands.show_command")
 
 local M = {}
 
+---Displays current line history information in central pop up
 M.blame_current_line = function()
     local current_window = vim.api.nvim_get_current_win()
     local current_row = vim.api.nvim_win_get_cursor(current_window)[1]
