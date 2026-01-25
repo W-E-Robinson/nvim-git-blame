@@ -16,7 +16,7 @@ Trying my hand at Neovim plugin development with a simple Neovim plugin to show 
 
 ```lua
 {
-  'W-E-Robinson/nvim_git_blame',
+  'W-E-Robinson/nvim-git-blame',
   -- tag = "v1.0.0", -- uncomment to use a specific version
   config = function()
       require("nvim_git_blame").setup()
