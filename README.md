@@ -29,3 +29,4 @@ MIT
 mention 'q' to close
 
 make file stuf
+<img width="2384" height="1422" alt="image" src="https://github.com/user-attachments/assets/1501799a-aa1c-42f0-adca-35325a0d0f6c" />
