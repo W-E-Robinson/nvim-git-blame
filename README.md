@@ -1,4 +1,4 @@
-# nvim_git_blame
+# nvim-git-blame
 
 A small Neovim plugin to show Git blame information for your files and lines.
 
@@ -10,8 +10,6 @@ A small Neovim plugin to show Git blame information for your files and lines.
 
 ### Using `lazy.nvim`
 
-Add this to your plugin list:
-
 ```lua
 {
   'W-E-Robinson/nvim_git_blame',
@@ -21,3 +19,13 @@ Add this to your plugin list:
   end
 }
 ```
+
+## Usage
+...
+
+## License
+MIT
+
+mention 'q' to close
+
+make file stuf
