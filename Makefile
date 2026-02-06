@@ -4,4 +4,7 @@ style:
 check:
 	luacheck .
 
-pre-push: style check
+test:
+	busted --helper=spec/spec_helper.lua
+
+all: style check test
