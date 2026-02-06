@@ -42,12 +42,22 @@ Once installed:
 
 ### Makefile commands
 
-```makefile
-style:
-	stylua .
+format:
+```bash
+make style
+```
 
 check:
-	luacheck .
+```bash
+make check
+```
 
-pre-push: style check
+tests:
+```bash
+make test
+```
+
+all:
+```bash
+make all
 ```
