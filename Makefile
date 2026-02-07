@@ -2,7 +2,7 @@ style:
 	stylua .
 
 check:
-	luacheck .
+	luacheck --codes .
 
 test:
 	busted --helper=spec/spec_helper.lua .

@@ -13,7 +13,7 @@ M.blame_current_line = function()
     local buf = vim.api.nvim_create_buf(false, true)
 
     local blame = blame_command.BlameCommand:new()
-    local hash = blame:blame_current_line(file_path, current_row)
+    local hash = blame:blame_current_line(file_path, current_row).hash
 
     if utils.is_change_not_committed_yet(hash) then
         vim.api.nvim_buf_set_lines(
