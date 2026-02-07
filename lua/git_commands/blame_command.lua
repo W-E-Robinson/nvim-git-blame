@@ -16,9 +16,7 @@ end
 ---Returns formatted git blame information for a given line in a file
 ---@param file_path string Absolute file path
 ---@param row number line number to be blamed
----@return string hash
----@return string metadata
----@return string content
+---@return { hash: string, metadata: string, content: string }
 function BlameCommand:blame_current_line(file_path, row)
     self:append(file_path)
     self:append("-L")
@@ -31,7 +29,11 @@ function BlameCommand:blame_current_line(file_path, row)
     if not utils.is_line_full_history_available(hash) then
         hash = utils.remove_leading_caret_from_string(hash)
     end
-    return hash, metadata, content
+    return {
+        hash = hash,
+        metadata = metadata,
+        content = content,
+    }
 end
 
 M.BlameCommand = BlameCommand
