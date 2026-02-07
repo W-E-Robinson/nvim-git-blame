@@ -24,7 +24,7 @@ end
 ---Determines if commit hash is preceded with a caret, indicating incomoplete history
 ---@param commit_hash string The commit hash
 ---@return boolean
-function M.is_line_full_history_available(commit_hash) -- NOTE: add warning if so
+function M.is_line_full_history_available(commit_hash)
     return string.find(commit_hash, "%^") == nil
 end
 
