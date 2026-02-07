@@ -1,3 +1,13 @@
+## [Unreleased] - XXXX-XX-XX
+### Added
+- Pipeline on PRs for linting checks, formatting checks and busted tests
+
+### Changed
+
+### Fixed
+
+### Removed
+
 ## [1.0.0] - 2026-01-25
 
 ### Added
