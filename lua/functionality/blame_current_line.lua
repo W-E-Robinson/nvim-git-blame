@@ -23,7 +23,11 @@ M.blame_current_line = function()
             false,
             { "Not committed yet..." }
         )
-        rendering.display_buf_text_central_pop_up(buf, 1)
+        rendering.display_buf_text_central_floating_pop_up(
+            buf,
+            1,
+            "Commit Information"
+        )
         return
     end
 
@@ -34,7 +38,11 @@ M.blame_current_line = function()
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
-    rendering.display_buf_text_central_pop_up(buf, #lines)
+    rendering.display_buf_text_central_floating_pop_up(
+        buf,
+        #lines,
+        "Commit Information"
+    )
 end
 
 return M
