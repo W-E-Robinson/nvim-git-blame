@@ -48,7 +48,7 @@ function BlameCommand:commit_hashes_file(file_path)
 
     local blame_lines = utils.split_into_lines(self.stdout)
     local hashes = {}
-    for _, line in pairs(blame_lines) do
+    for _, line in ipairs(blame_lines) do
         local hash = line:match("^(%S+)")
         table.insert(hashes, hash)
     end
