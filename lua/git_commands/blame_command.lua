@@ -19,6 +19,7 @@ end
 ---@return { hash: string, metadata: string, content: string }
 function BlameCommand:blame_current_line(file_path, row)
     self:append(file_path)
+    -- Limit line range to only line chosen
     self:append("-L")
     self:append(string.format("%d,+1", row))
     self:execute()
