@@ -1,4 +1,5 @@
 local blame_current_line_module = require("functionality.blame_current_line")
+local files_commit_hashes_module = require("functionality.files_commit_hashes")
 
 local config = {}
 
@@ -12,6 +13,10 @@ end
 
 M.blame_current_line = function()
     return blame_current_line_module.blame_current_line()
+end
+
+M.files_commit_hashes = function()
+    return files_commit_hashes_module.files_commit_hashes()
 end
 
 return M
