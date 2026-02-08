@@ -36,6 +36,25 @@ function BlameCommand:blame_current_line(file_path, row)
     }
 end
 
+---Returns commit hashes for every line for a provided file path
+---@param file_path string Absolute file path
+---@return string[] Commit hash strings for each line of the file
+function BlameCommand:commit_hashes_file(file_path)
+    self:append(file_path)
+    -- Suppress the author name and timestamp from the output
+    self:append("-s")
+    self:execute()
+
+    local blame_lines = utils.split_into_lines(self.stdout)
+    local hashes = {}
+    for _, line in pairs(blame_lines) do
+        local hash = line:match("^(%S+)")
+        table.insert(hashes, hash)
+    end
+
+    return hashes
+end
+
 M.BlameCommand = BlameCommand
 
 return M
