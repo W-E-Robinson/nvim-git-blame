@@ -1,5 +1,6 @@
 local blame_current_line_module = require("functionality.blame_current_line")
 local files_commit_hashes_module = require("functionality.files_commit_hashes")
+local utils = require("utils.module")
 
 local config = {}
 
@@ -12,11 +13,15 @@ M.setup = function(args)
 end
 
 M.blame_current_line = function()
-    return blame_current_line_module.blame_current_line()
+    utils.plugin_functionality_error_handler_wrapper(
+        blame_current_line_module.blame_current_line
+    )
 end
 
 M.files_commit_hashes = function()
-    return files_commit_hashes_module.files_commit_hashes()
+    utils.plugin_functionality_error_handler_wrapper(
+        files_commit_hashes_module.files_commit_hashes
+    )
 end
 
 return M

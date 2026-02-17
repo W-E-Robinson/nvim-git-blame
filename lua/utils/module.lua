@@ -1,3 +1,5 @@
+local rendering = require("rendering.module")
+
 local M = {}
 
 ---Removes new lines '\n' from a string
@@ -46,6 +48,23 @@ local UNCOMMITTED_GIT_HASH = "00000000"
 ---@return boolean
 function M.is_change_not_committed_yet(commit_hash)
     return string.sub(commit_hash, 1, 8) == UNCOMMITTED_GIT_HASH
+end
+
+---Wraps functionality in a pcall to gracefully handle any errors created
+---during git command execution. All exposed plugin functionality to use
+---@param func function Functionality to be called
+function M.plugin_functionality_error_handler_wrapper(func)
+    local ok, result = pcall(func)
+
+    if not ok then
+        local buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, result)
+        rendering.display_buf_text_central_floating_pop_up(
+            buf,
+            #result,
+            "Error Information"
+        )
+    end
 end
 
 return M

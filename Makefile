@@ -1,3 +1,5 @@
+all: style check test
+
 style:
 	stylua .
 
@@ -6,5 +8,3 @@ check:
 
 test:
 	busted --helper=spec/spec_helper.lua
-
-all: style check test

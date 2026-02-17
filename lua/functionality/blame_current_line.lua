@@ -10,21 +10,21 @@ M.blame_current_line = function()
     local current_window = vim.api.nvim_get_current_win()
     local current_row = vim.api.nvim_win_get_cursor(current_window)[1]
     local file_path = utils.current_file_path()
-    local buf = vim.api.nvim_create_buf(false, true)
 
     local blame = blame_command.BlameCommand:new()
     local hash = blame:blame_current_line(file_path, current_row).hash
 
     if utils.is_change_not_committed_yet(hash) then
+        local not_committed_buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_lines(
-            buf,
+            not_committed_buf,
             0,
             -1,
             false,
             { "Not committed yet..." }
         )
         rendering.display_buf_text_central_floating_pop_up(
-            buf,
+            not_committed_buf,
             1,
             "Commit Information"
         )
@@ -36,10 +36,11 @@ M.blame_current_line = function()
 
     local lines = utils.split_into_lines(show_stdout)
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    local commit_info_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(commit_info_buf, 0, -1, false, lines)
 
     rendering.display_buf_text_central_floating_pop_up(
-        buf,
+        commit_info_buf,
         #lines,
         "Commit Information"
     )
