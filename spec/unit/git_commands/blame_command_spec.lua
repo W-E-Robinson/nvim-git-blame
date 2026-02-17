@@ -133,4 +133,35 @@ describe("unit tests: git blame command", function()
             vim.system:revert()
         end)
     end)
+
+    describe("commit_hashes_file method", function()
+        it(
+            "should return a table containing all the file's lines commit hashes",
+            function()
+                _G.vim = _G.vim or {}
+
+                stub(vim, "system", function()
+                    return {
+                        wait = function()
+                            return {
+                                code = 0,
+                                system = 0,
+                                stdout = "1234567890 1) # hello\n1234567890 2) # world",
+                                stderr = "",
+                            }
+                        end,
+                    }
+                end)
+
+                local instance_blame_command = blame_command.BlameCommand:new()
+                local commit_hashes = instance_blame_command:commit_hashes_file(
+                    "./redundant_file_path"
+                )
+
+                assert.are.same(commit_hashes, { "1234567890", "1234567890" })
+
+                vim.system:revert()
+            end
+        )
+    end)
 end)
