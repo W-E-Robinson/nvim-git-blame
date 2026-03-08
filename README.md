@@ -1,6 +1,32 @@
 # nvim-git-blame
+- [Introduction](#introduction)
+- [Features](#features)
+    - [BlameCurrentLine](#blamecurrentline)
+    - [FilesCommitHashes](#filescommithashes)
+- [Setup](#setup)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+        - [Lazy](#lazy)
+- [Development](#development)
+    - [Local Plugin Setup](#localpluginsetup)
+    - [Makefile Commands](#makefilecommands)
+- [Future Ideas](#futureideas)
 
 Trying my hand at Neovim plugin development with a simple Neovim plugin to show Git blame information for your files and lines.
+
+# Table of contents
+1. [Introduction](#introduction)
+2. [Some paragraph](#paragraph1)
+3. [Another paragraph](#paragraph2)
+
+## This is the introduction <a name="introduction"></a>
+Some introduction text, formatted in heading 2 style
+
+## Some paragraph <a name="paragraph1"></a>
+The first paragraph text
+
+### Sub paragraph <a name="subparagraph1"></a>
+This is a sub paragraph, formatted in heading
 
 [![GitHub release](https://img.shields.io/github/v/release/W-E-Robinson/nvim-git-blame?label=latest&sort=semver)](https://github.com/W-E-Robinson/nvim-git-blame/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)

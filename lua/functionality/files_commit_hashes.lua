@@ -1,8 +1,9 @@
--- NOTE: in this file do all buffer stuff and all after git so errors happen
 local utils = require("utils.module")
 local blame_command = require("git_commands.blame_command")
 
 local M = {}
+
+local namespace = vim.api.nvim_create_namespace("files_commit_hashes")
 
 ---Generates the hashes buf using the input table of commt hashes
 ---@param hashes string[] hashes to generate the buf from
@@ -70,8 +71,6 @@ local function current_row(window)
     return row
 end
 
-local namespace = vim.api.nvim_create_namespace("files_commit_hashes")
-
 ---Clears the namespace of a buf and re highlights new lines
 ---@param buf integer buf to have namespace cleared and rehighlighted
 ---@param lines integer[] lines to now be highlighted
@@ -125,13 +124,14 @@ end
 
 ---Displays all of a file's lines' commit hashes
 M.files_commit_hashes = function()
-    -- Windows setup
-    local original_window = vim.api.nvim_get_current_win()
-    local original_buf = vim.api.nvim_win_get_buf(original_window)
-
+    -- Git commands execute first so any error are thrown before windows/bufs created
     local file_path = utils.current_file_path()
     local blame = blame_command.BlameCommand:new()
     local hashes = blame:commit_hashes_file(file_path)
+
+    -- Windows setup
+    local original_window = vim.api.nvim_get_current_win()
+    local original_buf = vim.api.nvim_win_get_buf(original_window)
 
     local hashes_buf = generate_hashes_buf_with_text(hashes)
     local hashes_window = render_hashes_win(hashes_buf, #hashes)
@@ -141,7 +141,7 @@ M.files_commit_hashes = function()
     scroll_bind_two_windows_together(hashes_window, original_window)
 
     -- Highlighting based on line function called from
-    update_highlights_both_windows(original_window, hashes_window, hashes) -- NOTE: pull externally?
+    update_highlights_both_windows(original_window, hashes_window, hashes)
 
     -- Autocommands
     local group =
@@ -161,12 +161,14 @@ M.files_commit_hashes = function()
     vim.api.nvim_create_autocmd("WinClosed", {
         group = group,
         callback = function(args)
-            local closed_win = tonumber(args.match) -- pull into separate function with name
+            local closed_win = tonumber(args.match) -- NOTE: pull into separate function with name?
 
-            if closed_win == original_window then -- this not working
+            if closed_win == original_window then -- NOTE: this not working
                 if vim.api.nvim_win_is_valid(hashes_window) then
                     vim.api.nvim_win_close(hashes_window, true)
                 end
+                -- NOTE: ++ tie everything to this namespace? binding and all = easy teardown?!!
+                -- NOTE: clearname space here too,
             elseif closed_win == hashes_window then
                 if vim.api.nvim_buf_is_valid(original_buf) then
                     vim.api.nvim_buf_clear_namespace(
@@ -181,12 +183,5 @@ M.files_commit_hashes = function()
     })
 end
 
--- so close of original? or move of original?
--- only one of WinCloses works?
--- doesn't work when repeatedly open
--- remove highlitng when function again? or close hashes window?
--- or redo fch
--- scrolling only works when in original at the moment
--- go to bottom of this file anf fch, why not working?
 
 return M
