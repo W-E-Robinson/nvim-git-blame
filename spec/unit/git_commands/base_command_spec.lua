@@ -74,6 +74,7 @@ describe("unit tests: git base command", function()
                         wait = function()
                             return {
                                 code = 0,
+                                stderr = "",
                             }
                         end,
                     }
@@ -101,6 +102,7 @@ describe("unit tests: git base command", function()
                         wait = function()
                             return {
                                 signal = 0,
+                                stderr = "",
                             }
                         end,
                     }
@@ -128,6 +130,7 @@ describe("unit tests: git base command", function()
                         wait = function()
                             return {
                                 stdout = "stdout string",
+                                stderr = "",
                             }
                         end,
                     }
@@ -145,31 +148,34 @@ describe("unit tests: git base command", function()
             end
         )
 
-        it(
-            "should set the stderr entry to stderr output from the vim system command",
-            function()
-                _G.vim = _G.vim or {}
+        it("should error out when stderr is not an empty string", function()
+            _G.vim = _G.vim or {}
 
-                stub(vim, "system", function()
-                    return {
-                        wait = function()
-                            return {
-                                stderr = "stderr string",
-                            }
-                        end,
-                    }
-                end)
+            stub(vim, "system", function()
+                return {
+                    wait = function()
+                        return {
+                            stderr = "stderr string",
+                        }
+                    end,
+                }
+            end)
 
-                local git_command_table = { "git", "diff" }
-                local diff_base_command =
-                    base_command.BaseCommand:new(git_command_table)
+            local git_command_table = { "git", "diff" }
+            local diff_base_command =
+                base_command.BaseCommand:new(git_command_table)
 
-                diff_base_command:execute()
+            local ok, result = pcall(function()
+                return diff_base_command:execute()
+            end)
 
-                assert.are.same("stderr string", diff_base_command.stderr)
+            assert.are.same(ok, false)
+            assert.are.same({
+                "command - git diff",
+                "error - stderr string",
+            }, result)
 
-                vim.system:revert()
-            end
-        )
+            vim.system:revert()
+        end)
     end)
 end)
