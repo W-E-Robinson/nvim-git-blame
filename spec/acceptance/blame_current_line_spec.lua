@@ -1,8 +1,8 @@
--- at the end of all this I seriously need to look at the structure
---
--- NOTE: once done thisd file, how tidy and modularise?
---  with text to describe all testing and this in particular in README.md
--- only works when called from top level?
+-- striuctre
+---- pull setup into separate
+---- and closing of instance
+-- with text to describe all testing and this in particular in README.md
+---- only works when called from top level?
 
 describe("acceptance test: BlameCurrentLine", function()
     local test_output = "./test_output"
@@ -57,7 +57,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(pop_up_text, "Commit Information")
             end
@@ -83,7 +82,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(
                     pop_up_text,
@@ -112,7 +110,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(
                     pop_up_text,
@@ -141,7 +138,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(
                     pop_up_text,
@@ -170,7 +166,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(
                     pop_up_text,
@@ -265,7 +260,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(pop_up_text, "Commit Information")
             end
@@ -291,7 +285,6 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 local f = io.open(test_output, "r")
                 local pop_up_text = f:read("*l")
-                print(pop_up_text)
 
                 assert.are.same(pop_up_text, "Not committed yet...")
             end

@@ -57,6 +57,8 @@ tests:
 make test
 ```
 
+`make test` must be run for repo root to work. The files `spec/acceptance/git_tracked_file` and `spec/acceptance/updated_git_tracked_file` must not be altered in any way, this includes moving of location or changing of git hashes.
+
 all:
 ```bash
 make all
