@@ -1,15 +1,8 @@
 -- at the end of all this I seriously need to look at the structure
--- need to merge commit this one to not change the hashes?
+--
 -- NOTE: once done thisd file, how tidy and modularise?
 --  with text to describe all testing and this in particular in README.md
 -- only works when called from top level?
--- we CAN print from inside acceptance test!
-
--- tests
--- spawns a pop up window when the line is not committed yet = do last as complex!!, actually not that bad, just update and go back in another file in here? OR same file?
--- displays no committed info in pop up window = do last as complex!! = have temp file, round to hello
--- spawns a pop up window for the git information for the line
--- displays git information for the line in the pop up window
 
 describe("acceptance test: BlameCurrentLine", function()
     local test_output = "./test_output"
@@ -44,7 +37,32 @@ describe("acceptance test: BlameCurrentLine", function()
             end
         )
 
-        -- NOTE: test to get the title? = Commit Information
+        it(
+            "spawned pop up window displays the commit information title",
+            function()
+                local cmd = string.format(
+                    [[
+                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
+                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
+                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
+                        -c "lua require('nvim_git_blame')" \
+                        -c "BlameCurrentLine" \
+                        -c "lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')" \
+                        -c "qa!"
+                    ]],
+                    test_output
+                )
+
+                os.execute(cmd)
+
+                local f = io.open(test_output, "r")
+                local pop_up_text = f:read("*l")
+                print(pop_up_text)
+
+                assert.are.same(pop_up_text, "Commit Information")
+            end
+        )
+
         it(
             "spawned pop up window displays the commit information in the first line",
             function()
@@ -227,7 +245,32 @@ describe("acceptance test: BlameCurrentLine", function()
             end
         )
 
-        -- NOTE: test to get the title? = Commit Information
+        it(
+            "spawned pop up window displays the commit information title",
+            function()
+                local cmd = string.format(
+                    [[
+                        nvim --headless -u NORC spec/acceptance/updated_git_tracked_file.txt \
+                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
+                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
+                        -c "lua require('nvim_git_blame')" \
+                        -c "BlameCurrentLine" \
+                        -c "lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')" \
+                        -c "qa!"
+                    ]],
+                    test_output
+                )
+
+                os.execute(cmd)
+
+                local f = io.open(test_output, "r")
+                local pop_up_text = f:read("*l")
+                print(pop_up_text)
+
+                assert.are.same(pop_up_text, "Commit Information")
+            end
+        )
+
         it(
             "spawned pop up window displays the not yet committed message in the first line",
             function()
