@@ -43,6 +43,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y neovim luarocks
+          sudo luarocks install busted
+
       - name: Run Busted
         uses: lunarmodules/busted@v2.3.0
         with:
