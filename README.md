@@ -52,12 +52,24 @@ check:
 make check
 ```
 
-tests:
+tests all:
 ```bash
 make test
 ```
 
 `make test` must be run from repo root to work. The files `spec/acceptance/git_tracked_file` and `spec/acceptance/updated_git_tracked_file` must not be moved or altered in any way.
+
+tests unit:
+```bash
+make test-unit
+```
+
+Only unit tests are currently run in pipelines.
+
+tests acceptance:
+```bash
+make test-acceptance
+```
 
 all:
 ```bash

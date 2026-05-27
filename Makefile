@@ -8,3 +8,9 @@ check:
 
 test:
 	busted --helper=spec/spec_helper.lua --output=TAP
+
+test-unit:
+	busted --helper=spec/spec_helper.lua --output=TAP spec/unit/
+
+test-acceptance:
+	busted --helper=spec/spec_helper.lua --output=TAP spec/acceptance/
