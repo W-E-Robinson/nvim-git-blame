@@ -1,6 +1,6 @@
 ## [Unreleased] - XXXX-XX-XX
 ### Added
-- Pipeline on PRs for linting checks, formatting checks and busted tests
+- Pipeline on PRs for linting checks, formatting checks and busted tests (unit)
 
 ### Changed
 
