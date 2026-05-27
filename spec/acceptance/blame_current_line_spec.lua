@@ -1,9 +1,3 @@
--- striuctre
----- pull setup into separate
----- and closing of instance
--- with text to describe all testing and this in particular in README.md
----- only works when called from top level?
-
 describe("acceptance test: BlameCurrentLine", function()
     local test_output = "./test_output"
 
