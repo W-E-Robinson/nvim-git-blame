@@ -50,6 +50,4 @@ jobs:
           sudo luarocks install busted
 
       - name: Run Busted
-        uses: lunarmodules/busted@v2.3.0
-        with:
-          args: --helper=spec/spec_helper.lua
+        run: busted --helper=spec/spec_helper.lua spec/unit/

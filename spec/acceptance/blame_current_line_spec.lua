@@ -1,5 +1,9 @@
 describe("acceptance test: BlameCurrentLine", function()
-    local test_output = "./test_output"
+    local test_output
+
+    before_each(function()
+        test_output = os.tmpname()
+    end)
 
     after_each(function()
         os.remove(test_output)
@@ -22,12 +26,18 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local num_windows = f:read("*l")
+                f:close()
 
-                assert.are.same(num_windows, "2")
+                assert.are.same("2", num_windows)
             end
         )
 
@@ -47,10 +57,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(pop_up_text, "Commit Information")
             end
@@ -72,10 +88,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(
                     pop_up_text,
@@ -100,10 +122,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(
                     pop_up_text,
@@ -128,10 +156,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(
                     pop_up_text,
@@ -156,10 +190,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(
                     pop_up_text,
@@ -225,10 +265,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local num_windows = f:read("*l")
+                f:close()
 
                 assert.are.same(num_windows, "2")
             end
@@ -250,10 +296,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(pop_up_text, "Commit Information")
             end
@@ -275,10 +327,16 @@ describe("acceptance test: BlameCurrentLine", function()
                     test_output
                 )
 
-                os.execute(cmd)
+                local ok = os.execute(cmd)
+                assert.is_truthy(ok)
 
-                local f = io.open(test_output, "r")
+                local f = assert(
+                    io.open(test_output, "r"),
+                    "failed to open test output"
+                )
+
                 local pop_up_text = f:read("*l")
+                f:close()
 
                 assert.are.same(pop_up_text, "Not committed yet...")
             end
