@@ -33,9 +33,12 @@ end
 ---@return table string[]
 function M.split_into_lines(str)
     local t = {}
-    for line in str:gmatch("([^\n]*)\n?") do
+
+    str = str .. "\n"
+    for line in str:gmatch("(.-)\n") do
         table.insert(t, line)
     end
+
     return t
 end
 
