@@ -183,5 +183,4 @@ M.files_commit_hashes = function()
     })
 end
 
-
 return M

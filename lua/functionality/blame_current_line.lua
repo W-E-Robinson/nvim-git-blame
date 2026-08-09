@@ -37,6 +37,7 @@ M.blame_current_line = function()
     local lines = utils.split_into_lines(show_stdout)
 
     local commit_info_buf = vim.api.nvim_create_buf(false, true)
+
     vim.api.nvim_buf_set_lines(commit_info_buf, 0, -1, false, lines)
 
     rendering.display_buf_text_central_floating_pop_up(
