@@ -101,7 +101,7 @@ describe("acceptance test: BlameCurrentLine", function()
 
                 assert.are.same(
                     pop_up_text,
-                    "commit 6a1c51c4e52979de123e4a2d41fde4592dfd3c9d"
+                    "commit 06eaed1daf8b0c0f6f8e5b0ceb56685e031faf9d"
                 )
             end
         )
