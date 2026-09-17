@@ -1,4 +1,16 @@
 # nvim-git-blame
+- [Introduction](#introduction)
+- [Features](#features)
+    - [BlameCurrentLine](#blamecurrentline)
+    - [FilesCommitHashes](#filescommithashes)
+- [Setup](#setup)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+        - [Lazy](#lazy)
+- [Development](#development)
+    - [Local Plugin Setup](#localpluginsetup)
+    - [Makefile Commands](#makefilecommands)
+- [Future Ideas](#futureideas)
 
 Trying my hand at Neovim plugin development with a simple Neovim plugin to show Git blame information for your files and lines.
 

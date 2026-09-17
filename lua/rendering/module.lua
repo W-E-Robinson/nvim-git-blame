@@ -7,7 +7,8 @@ local M = {}
 ---@param buf integer Buf to be displayed, buf contains a table of strings
 ---@param height number provided height required to display lines of buf
 ---@param title string title of the pop up
-function M.display_buf_text_central_floating_pop_up(buf, height, title)
+---@param hash string if uncommitted (00000000) will not be available to copy
+function M.display_buf_text_central_floating_pop_up(buf, height, title, hash)
     local width = CENTRAL_POP_UP_WIDTH_COLUMNS
 
     local win = vim.api.nvim_open_win(buf, true, {
@@ -32,6 +33,12 @@ function M.display_buf_text_central_floating_pop_up(buf, height, title)
             vim.api.nvim_buf_delete(buf, { force = true })
         end
     end, { buffer = buf, silent = true })
+
+    if hash ~= "00000000" then
+        vim.keymap.set("n", "c", function()
+            vim.fn.setreg("+", hash)
+        end, { buffer = buf, silent = true })
+    end
 end
 
 return M
