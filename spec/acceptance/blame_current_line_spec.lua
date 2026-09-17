@@ -9,98 +9,76 @@ describe("acceptance test: BlameCurrentLine", function()
         os.remove(test_output)
     end)
 
+    ---Runs BlameCurrentLine on a file in a headless nvim, then runs a lua
+    ---snippet that writes the value under test to the test output file, this can
+    ---then be asserted against in the test.
+    ---@param file string file to open nvim with
+    ---@param lua_to_run string lua command containing a single `%s`
+    ---placeholder for the test output path to write to
+    ---@return string output first line written to the test output file
+    local function run_cmds_and_get_output(file, lua_to_run)
+        local cmd = string.format(
+            [[
+                nvim --headless -u NORC %s \
+                -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
+                -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
+                -c "lua require('nvim_git_blame')" \
+                -c "BlameCurrentLine" \
+                -c "%s" \
+                -c "qa!"
+            ]],
+            file,
+            string.format(lua_to_run, test_output)
+        )
+
+        os.execute(cmd)
+
+        local f = assert( -- assertion purely for nil check
+            io.open(test_output, "r"),
+            "failed to open test output"
+        )
+
+        local output = f:read("*l")
+        f:close()
+
+        return output
+    end
+
     describe("file with committed line", function()
         it(
             "spawns a pop up window when BlameCurrentLine is called on the line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({#vim.api.nvim_list_wins()}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.writefile({#vim.api.nvim_list_wins()}, '%s')]]
                 )
 
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local num_windows = f:read("*l")
-                f:close()
-
-                assert.are.same("2", num_windows)
+                assert.are.same("2", output)
             end
         )
 
         it(
             "spawned pop up window displays the commit information title",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')]]
                 )
 
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
-
-                assert.are.same(pop_up_text, "Commit Information")
+                assert.are.same(output, "Commit Information")
             end
         )
 
         it(
             "spawned pop up window displays the commit information in the first line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 0, 1, false)[1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 0, 1, false)[1]}, '%s')]]
                 )
-
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
 
                 assert.are.same(
-                    pop_up_text,
+                    output,
                     "commit 06eaed1daf8b0c0f6f8e5b0ceb56685e031faf9d"
                 )
             end
@@ -109,32 +87,13 @@ describe("acceptance test: BlameCurrentLine", function()
         it(
             "spawned pop up window displays the commiters name and email information in the second line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 1, 2, false)[1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 1, 2, false)[1]}, '%s')]]
                 )
-
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
 
                 assert.are.same(
-                    pop_up_text,
+                    output,
                     "Author: Will Robinson <william.ellis.robinson@gmail.com>"
                 )
             end
@@ -143,32 +102,13 @@ describe("acceptance test: BlameCurrentLine", function()
         it(
             "spawned pop up window displays the datetime of the commit in the third line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 2, 3, false)[1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 2, 3, false)[1]}, '%s')]]
                 )
-
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
 
                 assert.are.same(
-                    pop_up_text,
+                    output,
                     "Date:   Mon Mar 16 21:54:25 2026 +0000"
                 )
             end
@@ -177,29 +117,10 @@ describe("acceptance test: BlameCurrentLine", function()
         it(
             "spawned pop up window begins to display commit message in the fifth line (after line space)",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 4, 5, false)[1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local pop_up_text = run_blame_current_line_and_assert(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 4, 5, false)[1]}, '%s')]]
                 )
-
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
 
                 assert.are.same(
                     pop_up_text,
@@ -252,91 +173,34 @@ describe("acceptance test: BlameCurrentLine", function()
         it(
             "spawns a pop up window when BlameCurrentLine is called on the line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/updated_git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({#vim.api.nvim_list_wins()}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/updated_git_tracked_file.txt",
+                    [[lua vim.fn.writefile({#vim.api.nvim_list_wins()}, '%s')]]
                 )
 
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local num_windows = f:read("*l")
-                f:close()
-
-                assert.are.same(num_windows, "2")
+                assert.are.same(output, "2")
             end
         )
 
         it(
             "spawned pop up window displays the commit information title",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/updated_git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/updated_git_tracked_file.txt",
+                    [[lua local win = vim.api.nvim_get_current_win(); local title = vim.api.nvim_win_get_config(win).title; vim.fn.writefile({title[1][1]}, '%s')]]
                 )
 
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
-
-                assert.are.same(pop_up_text, "Commit Information")
+                assert.are.same(output, "Commit Information")
             end
         )
 
         it(
             "spawned pop up window displays the not yet committed message in the first line",
             function()
-                local cmd = string.format(
-                    [[
-                        nvim --headless -u NORC spec/acceptance/updated_git_tracked_file.txt \
-                        -c "lua package.path = './lua/?.lua;./lua/?/init.lua;'..package.path" \
-                        -c "lua local m = require('nvim_git_blame'); vim.api.nvim_create_user_command('BlameCurrentLine', m.blame_current_line, {})" \
-                        -c "lua require('nvim_git_blame')" \
-                        -c "BlameCurrentLine" \
-                        -c "lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 0, 1, false)[1]}, '%s')" \
-                        -c "qa!"
-                    ]],
-                    test_output
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/updated_git_tracked_file.txt",
+                    [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 0, 1, false)[1]}, '%s')]]
                 )
-
-                local ok = os.execute(cmd)
-                assert.is_truthy(ok)
-
-                local f = assert(
-                    io.open(test_output, "r"),
-                    "failed to open test output"
-                )
-
-                local pop_up_text = f:read("*l")
-                f:close()
 
                 assert.are.same(pop_up_text, "Not committed yet...")
             end
