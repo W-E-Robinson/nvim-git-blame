@@ -117,15 +117,27 @@ describe("acceptance test: BlameCurrentLine", function()
         it(
             "spawned pop up window begins to display commit message in the fifth line (after line space)",
             function()
-                local pop_up_text = run_blame_current_line_and_assert(
+                local output = run_cmds_and_get_output(
                     "spec/acceptance/git_tracked_file.txt",
                     [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 4, 5, false)[1]}, '%s')]]
                 )
 
                 assert.are.same(
-                    pop_up_text,
+                    output,
                     '    test: added first acceptance for "spawns a pop up window when BlameCurrentLine'
                 )
+            end
+        )
+
+        it(
+            "should copy the hash into the clipboard when pressing 'c' in normal mode when focused on the modal",
+            function()
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/git_tracked_file.txt",
+                    [[lua vim.fn.setreg('+', 'placeholder'); vim.cmd.normal({ 'c' }); vim.fn.writefile({ vim.fn.getreg('+') }, '%s')]]
+                )
+
+                assert.are.same(output, "06eaed1d")
             end
         )
     end)
@@ -202,7 +214,19 @@ describe("acceptance test: BlameCurrentLine", function()
                     [[lua vim.fn.writefile({vim.api.nvim_buf_get_lines(2, 0, 1, false)[1]}, '%s')]]
                 )
 
-                assert.are.same(pop_up_text, "Not committed yet...")
+                assert.are.same(output, "Not committed yet...")
+            end
+        )
+
+        it(
+            "should not be able to copy the hash into the clipboard using 'c' in normal mode",
+            function()
+                local output = run_cmds_and_get_output(
+                    "spec/acceptance/updated_git_tracked_file.txt",
+                    [[lua vim.fn.setreg('+', 'placeholder'); vim.cmd.normal({ 'c' }); vim.fn.writefile({ vim.fn.getreg('+') }, '%s')]]
+                )
+
+                assert.are.same(output, "placeholder")
             end
         )
     end)

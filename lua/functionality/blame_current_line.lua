@@ -26,7 +26,8 @@ M.blame_current_line = function()
         rendering.display_buf_text_central_floating_pop_up(
             not_committed_buf,
             1,
-            "Commit Information"
+            "Commit Information",
+            "00000000" -- uncommitted short hash
         )
         return
     end
@@ -43,7 +44,8 @@ M.blame_current_line = function()
     rendering.display_buf_text_central_floating_pop_up(
         commit_info_buf,
         #lines,
-        "Commit Information"
+        "Commit Information",
+        hash
     )
 end
 

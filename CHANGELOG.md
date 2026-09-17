@@ -1,5 +1,6 @@
 ## [Unreleased] - XXXX-XX-XX
 ### Added
+- When in the BlameCurrentLine modal, pressing `c` in normal mode copies the commit hash
 - Pipeline on PRs for linting checks, formatting checks and busted tests (unit)
 
 ### Changed
